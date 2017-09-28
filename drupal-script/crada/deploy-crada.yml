@@ -47,7 +47,7 @@
   
      - name: rsync the sites directory
        shell:
-         cmd: rsync -rvcCi --exclude=settings.php {{ gitroot }}/default/  {{ siteroot }}/
+         cmd: rsync -rvcCi --exclude 'settings.php' {{ gitroot }}/default/  {{ siteroot }}/
        register: rsyncout
      - debug: msg={{ rsyncout }}
 
