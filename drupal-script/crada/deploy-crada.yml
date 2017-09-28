@@ -15,7 +15,9 @@
      - dbfile: "{{ site }}-{{ tier }}-db"
      - date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
      - sitecopy: "{{ site }}-site-{{ tier }}-copy"
-     - giturl: https://github.com/CBIIT/CRADA
+     - git_user: '{{ git_user }}'
+     - git_password: '{{ git_password }}'
+     - giturl: https://{{ git_user }}:{{ git_password }}@github.com/CBIIT/CRADA
      - gitroot: /local/drupal/gitsource/CRADA
      - backups: /local/drupal/backups
      - drupaluser: drupal
