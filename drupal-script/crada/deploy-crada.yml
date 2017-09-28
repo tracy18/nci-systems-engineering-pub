@@ -26,7 +26,7 @@
    tasks:
      - name: Take sql dump of {{ tier }} database.
        shell: 
-         cmd: "drush sql-dump --gzip --result-file={{ backups }}/{{ dbfile }}-{{ date }}"
+         cmd: "drush sql-dump --result-file={{ backups }}/{{ dbfile }}-{{ date }}.sql"
          chdir: "{{ siteroot }}"
 
      - name: Backup {{ site }} directory
@@ -47,7 +47,7 @@
   
      - name: rsync the sites directory
        shell:
-         cmd: rsync -rvcCi {{ gitroot }}/default/  {{ siteroot }}/
+         cmd: rsync -rvcCi --exclude=settings.php {{ gitroot }}/default/  {{ siteroot }}/
        register: rsyncout
      - debug: msg={{ rsyncout }}
 
