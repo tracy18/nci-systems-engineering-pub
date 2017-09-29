@@ -6,15 +6,14 @@
   become_method: dzdo
   gather_facts: no
   vars:
-    database_location: /admfs/drupal_deployment
-    file_upload: '{{ file_upload }}'
-    sitename: '{{ sitename }}'
-    host: '{{ host }}'
+    - database_location: /admfs/drupal_deployment
+    - sitename: '{{ sitename }}'
+    - host: '{{ host }}'
   tasks:
     - name: copy file to admfs
       copy: src={{ item.src }} dest={{ item.dest }}
       with_items:
-         - { src: '{{ upload }}/{{ file_upload }}', dest: '{{ database_location }}/{{ sitename }}/{{ sitename }}-database-update.sql' }
+         - { src: '{{ upload }}/{{ sitename }}.sql', dest: '{{ database_location }}/{{ sitename }}/{{ sitename }}-database-update.sql' }
          
          
 
