@@ -10,10 +10,10 @@
     sitename: '{{ sitename }}'
     host: '{{ host }}'
   tasks:
-    - name: copying {{ file_upload }}  to admfs
-      copy: src={{ item.src }} dest={{ item.dest }}
-      with_items:
-         - { src: 'uploads/{{ sitename }}.sql', dest: '{{ database_location }}/{{ sitename }}/{{ sitename }}-database-update.sql' }
+    - name: copying the db file to admfs
+      copy: 
+        src:  uploads/{{ sitename }}.sql
+        dest: "{{ database_location }}/{{ sitename }}/{{ sitename }}-database-update.sql"
          
          
 
