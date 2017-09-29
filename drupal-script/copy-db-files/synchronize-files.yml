@@ -14,7 +14,7 @@
     - name: copy file to admfs
       copy: src={{ item.src }} dest={{ item.dest }}
       with_items:
-         - { src: '{{ downloads }}/{{ file_upload }}', dest: '{{ database_location }}/{{ sitename }}/{{ sitename }}-database-update.sql' }
+         - { src: '{{ upload }}/{{ file_upload }}', dest: '{{ database_location }}/{{ sitename }}/{{ sitename }}-database-update.sql' }
          
          
 
