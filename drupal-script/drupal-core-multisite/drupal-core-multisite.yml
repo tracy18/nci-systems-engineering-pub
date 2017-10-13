@@ -1,12 +1,11 @@
 ---
  - name: Drupal Core Update to {{ drupal_version }}
-   hosts: '{{ hosts }}'
+   hosts: '{{ host }}'
    become: yes
    become_user: root
    become_method: dzdo
    vars:
 
-     - site: '{{ site }}'
      - tier: '{{ tier }}'
      - drupal_version: '{{ drupal_version }}'
      - drupalroot: /local/drupal/drupal
