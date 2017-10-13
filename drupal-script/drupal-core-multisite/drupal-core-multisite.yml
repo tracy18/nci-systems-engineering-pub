@@ -11,7 +11,7 @@
      - drupalroot: /local/drupal/drupal
      - dbfile: "{{ item }}-{{ tier }}-db"
      - date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
-     - sitecopy: drupal-core-site-{{ tier }}-copy"
+     - sitecopy: "drupal-core-site-{{ tier }}-copy"
      - backups: /local/drupal/backups
      - drupaluser: drupal
      - sites_root: /local/drupal/drupal/sites
@@ -31,7 +31,7 @@
        with_items: 
          - "{{ find_out.stdout_lines }}"
 
-     - name: Backup site directory
+     - name: Backup drupal root  directory
        shell: 
          cmd: tar -czvf {{ backups }}/{{ sitecopy }}-{{ date }}.tgz {{ drupalroot }}
          
