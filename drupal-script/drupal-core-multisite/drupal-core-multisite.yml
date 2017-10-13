@@ -116,7 +116,7 @@
      - name: Take the {{ site }} out of maintenance mode
        shell: 
          cmd: drush vset --exact maintenance_mode 0
-         chdir: "{{ siteroot }}/{{ with_items }}"
+         chdir: "{{ siteroot }}/{{ item }}"
        with_items: 
          - "{{ find_out.stdout_lines }}"
 
