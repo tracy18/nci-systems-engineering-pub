@@ -36,13 +36,14 @@
   - debug: msg="The aws access key "{{aws_access_key}}""
   - debug: msg="The actionable_instance_id is"{{actionable_instance_id}}""
   - debug: msg="The aws secret key "{{aws_secret_key}}""
+  - debug: msg="The Session token "{{session_token}}""
 
   - name: Stop Instance
     local_action:
       module: ec2
       aws_region: "{{aws_region}}"
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
+      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
       security_token: "{{ assumed_role.sts_creds.session_token }}"
       instance_ids:
         - "{{actionable_instance_id}}"
@@ -57,8 +58,8 @@
   - name: Creating a Volume from a snapshot 
     ec2_vol: 
       region: "{{ aws_region }}"
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
+      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
       security_token: "{{ assumed_role.sts_creds.session_token }}"
       zone: "{{ issue_volume_zone }}"
       snapshot: "{{ snap_id }}"
@@ -73,8 +74,8 @@
   - name: Detach the old volume 
     ec2_vol:
       region: "{{ aws_region }}"
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
+      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
       security_token: "{{ assumed_role.sts_creds.session_token }}"
       id: "{{ issue_volume_id }}"
       instance: None
@@ -87,8 +88,8 @@
   - name: Attach the Created volume to an instance 
     ec2_vol:
       region: "{{ aws_region }}"
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
+      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
       security_token: "{{ assumed_role.sts_creds.session_token }}"
       instance: "{{ actionable_instance_id }}" 
       id: "{{ ec2_vol.volume_id }}" 
@@ -100,8 +101,8 @@
     local_action:
       module: ec2
       region: "{{ aws_region }}"
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
+      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
       security_token: "{{ assumed_role.sts_creds.session_token }}"
       instance_ids:
         - "{{actionable_instance_id}}"
