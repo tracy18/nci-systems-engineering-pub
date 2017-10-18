@@ -33,7 +33,7 @@
         instance-id: "{{actionable_instance_id}}"
     tags: always
 
-  #- debug: msg="The aws key "{{aws_access_key}}""
+  - debug: msg="The aws key "{{aws_access_key}}""
   - debug: msg="The actionable_instance_id is"{{actionable_instance_id}}""
 
   - name: Stop Instance
