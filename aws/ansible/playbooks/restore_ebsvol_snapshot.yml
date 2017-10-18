@@ -36,7 +36,7 @@
   - debug: msg="The aws access key "{{aws_access_key}}""
   - debug: msg="The actionable_instance_id is"{{actionable_instance_id}}""
   - debug: msg="The aws secret key "{{aws_secret_key}}""
-  - debug: msg="The Session token "{{session_token}}""
+  - debug: msg="The Session token "{{assumed_role.sts_creds.session_token}}""
 
   - name: Stop Instance
     local_action:
