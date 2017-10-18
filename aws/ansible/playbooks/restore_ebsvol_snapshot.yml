@@ -1,28 +1,27 @@
 ---
-- name: Include Secret File
-  include_vars: aws_creds.yml
-  become: no
-  #ignore_errors: yes
-  tags: always
+  - name: Include Secret File
+    include_vars: aws_creds.yml
+    become: no
+    #ignore_errors: yes
+    tags: always
 
-- name: Get STS Credentials
-  sts_assume_role:
-    role_arn: "arn:aws:iam::{{account_id}}:role/role-Jenkins"
-    region: "{{ aws_region }}"
-    aws_access_key: "{{aws_access_key}}"
-    aws_secret_key: "{{aws_secret_key}}"
-  register: assumed_role
-  tags: always
+  - name: Get STS Credentials
+    sts_assume_role:
+      role_arn: "arn:aws:iam::{{account_id}}:role/role-Jenkins"
+      region: "{{ aws_region }}"
+      aws_access_key: "{{aws_access_key}}"
+      aws_secret_key: "{{aws_secret_key}}"
+    register: assumed_role
+    tags: always
 
-
-- name: get remote facts
-  ec2_remote_facts:
-    aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-    aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-    region: "{{ aws_region }}"
-    filters:
-      instance-id: "{{actionable_instance_id}}"
-  tags: always
+  - name: get remote facts
+    ec2_info:
+      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+      region: "{{ aws_region }}"
+      filters:
+        instance-id: "{{actionable_instance_id}}"
+    tags: always
 
   #- debug: msg="The aws key "{{aws_access_key}}""
   - debug: msg="The actionable_instance_id is"{{actionable_instance_id}}""
