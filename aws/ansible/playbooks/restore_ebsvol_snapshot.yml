@@ -1,4 +1,12 @@
 ---
+# AWS provisioning playbooks
+- name: EC2 Restore from vol snapshots
+  hosts: localhost
+  connection: local
+  #include_vars: group_vars/all
+  gather_facts: False
+
+  tasks:
   - name: Include Secret File
     include_vars: aws_creds.yml
     become: no
