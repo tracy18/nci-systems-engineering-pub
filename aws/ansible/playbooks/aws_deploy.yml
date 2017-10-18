@@ -1,4 +1,4 @@
 - name: Manage AWS Resources
-  hosts: localhost
+  hosts: "{{variable_host}}"
   tasks:
     - include: restore_ebsvol_snapshot.yml
