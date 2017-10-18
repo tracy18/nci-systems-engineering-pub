@@ -1,0 +1,95 @@
+---
+- name: Include Secret File
+  include_vars: aws_creds.yml
+  become: no
+  #ignore_errors: yes
+  tags: always
+
+- name: Get STS Credentials
+  sts_assume_role:
+    role_arn: "arn:aws:iam::{{account_id}}:role/role-Jenkins"
+    region: "{{ aws_region }}"
+    aws_access_key: "{{aws_access_key}}"
+    aws_secret_key: "{{aws_secret_key}}"
+  register: assumed_role
+  tags: always
+
+
+- name: get remote facts
+  ec2_remote_facts:
+    aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+    aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+    region: "{{ aws_region }}"
+    filters:
+      instance-id: "{{actionable_instance_id}}"
+  tags: always
+
+  #- debug: msg="The aws key "{{aws_access_key}}""
+  - debug: msg="The actionable_instance_id is"{{actionable_instance_id}}""
+
+  - name: Stop Instance
+    local_action:
+      module: ec2
+      aws_region: "{{aws_region}}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      instance_ids:
+        - "{{actionable_instance_id}}"
+      state: stopped
+      wait: True
+    tags: restore_ebsvolsnap
+
+  #- debug: msg="The aws key "{{key_name}}""
+
+  - debug: msg="The good snap_id is"{{snap_id}}""
+
+  - name: Creating a Volume from a snapshot 
+    ec2_vol: 
+      region: "{{ aws_region }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      zone: "{{ issue_volume_zone }}"
+      snapshot: "{{ snap_id }}"
+      delete_on_termination: yes
+      #volume_size: 40 
+      #instance: "{{ actionable_instance_id }}"
+    register: ec2_vol 
+    tags: restore_ebsvolsnap
+
+  - debug: msg="The issue vol_id is"{{issue_volume_id}}""
+
+  - name: Detach the old volume 
+    ec2_vol:
+      region: "{{ aws_region }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      id: "{{ issue_volume_id }}"
+      instance: None
+    register: detach_vol
+    tags: restore_ebsvolsnap
+    ignore_errors: yes
+
+  - debug: msg="The newly created ec2_vol_id is"{{ec2_vol.volume_id}}""
+
+  - name: Attach the Created volume to an instance 
+    ec2_vol:
+      region: "{{ aws_region }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      instance: "{{ actionable_instance_id }}" 
+      id: "{{ ec2_vol.volume_id }}" 
+      device_name: "{{restore_device}}"
+      delete_on_termination: yes
+    tags: restore_ebsvolsnap
+  
+  - name: Start Instance
+    local_action:
+      module: ec2
+      region: "{{ aws_region }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      instance_ids:
+        - "{{actionable_instance_id}}"
+      state: running
+      wait: True
+    tags: restore_ebsvolsnap
