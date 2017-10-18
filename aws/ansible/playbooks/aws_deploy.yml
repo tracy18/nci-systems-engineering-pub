@@ -1,5 +1,9 @@
-- name: Manage AWS Resources
+- name: Deploy Application
   #hosts: 127.0.0.1
+  #hosts: "{{variable_host | default(cf_stack_name is defined | ternary(['tag_aws_cloudformation_stack-name_',app_name|default(''),'-', app_version|default(''),'-', cf_stack_name|default('')]|join|replace('.','-'),'all'))}}"
   hosts: "{{variable_host}}"
+  #hosts: localhost
+  #sudo: yes
+  #become: ec2-user
   tasks:
-    - include: restore_ebsvol_snapshot.yml
+    - include: manage_instance.yml
