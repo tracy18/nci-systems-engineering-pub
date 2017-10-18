@@ -2,4 +2,4 @@
   #hosts: 127.0.0.1
   hosts: "{{variable_host}}"
   tasks:
-    - include_tasks: restore_ebsvol_snapshot.yml
+    - include: restore_ebsvol_snapshot.yml
