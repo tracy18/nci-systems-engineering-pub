@@ -13,7 +13,7 @@
     - name: copying the site file to admfs
       copy: 
         src:  uploads/{{ sitename }}/files
-        dest: "{{ files_location }}/{{ sitename }}/files"
+        dest: "{{ files_location }}/{{ sitename }}"
          
          
 
