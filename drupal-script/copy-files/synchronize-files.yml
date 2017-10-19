@@ -1,0 +1,20 @@
+---
+- name: Transfer site files
+  hosts: '{{ host }}'
+  become: yes
+  become_user: root
+  become_method: dzdo
+  gather_facts: no
+  vars:
+    files_location: /admfs/drupal_deployment
+    sitename: '{{ sitename }}'
+    host: '{{ host }}'
+  tasks:
+    - name: copying the db file to admfs
+      copy: 
+        src:  uploads/{{ sitename }}/files
+        dest: "{{ files_location }}/{{ sitename }}/files"
+         
+         
+
+      
