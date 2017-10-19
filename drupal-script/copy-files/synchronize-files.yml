@@ -10,7 +10,7 @@
     sitename: '{{ sitename }}'
     host: '{{ host }}'
   tasks:
-    - name: copying the db file to admfs
+    - name: copying the site file to admfs
       copy: 
         src:  uploads/{{ sitename }}/files
         dest: "{{ files_location }}/{{ sitename }}/files"
