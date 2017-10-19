@@ -20,6 +20,7 @@
      - giturl: https://github.com/CBIIT/springboard.git
      - gitroot: /local/drupal/gitsource/{{ site }}
      - database_location: /admfs/drupal_deployment/springboard
+     - files_location: /admfs/drupal_deployment/springboard/files
      - backups: /local/drupal/backups
      - dblocation: /admfs/drupal_deployment/{{ site }}
      - prodsqlfile:  "{{ site }}-prod-db.sql"
@@ -59,6 +60,13 @@
      - name: rsync the sites directory
        shell:
          cmd: rsync -rvcCi  --exclude=settings.php {{ gitroot }}/sites/default/  {{ siteroot }}/
+       register: rsyncout
+     - debug: msg={{ rsyncout }}
+
+
+     - name: rsync the files directory
+       shell:
+         cmd: rsync -rvcCi  {{ files_location }}/  {{ siteroot }}/files/
        register: rsyncout
      - debug: msg={{ rsyncout }}
 
