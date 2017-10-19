@@ -14,7 +14,7 @@
    tasks:
      - name: Take sql dump of production file.
        shell: 
-         cmd: drush sql-dump --result-file={{ proddump }}/{{ prodsqlfile }}
+         cmd: drush sql-dump --skip-tables-list=domain --result-file={{ proddump }}/{{ prodsqlfile }}
          chdir: "{{ sfgroot }}"
 
 #     - name: Take copy of production files systems
