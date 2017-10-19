@@ -11,9 +11,7 @@
     host: '{{ host }}'
   tasks:
     - name: copying the site file to admfs
-      copy: 
-        src:  uploads/{{ sitename }}/files
-        dest: "{{ files_location }}/{{ sitename }}"
+      command: cp -a uploads/{{ sitename }}/files  "{{ files_location }}/{{ sitename }}"
          
          
 
