@@ -1,0 +1,8 @@
+aws_access_key: "{{aws_access_key}}"
+aws_secret_key: "{{aws_secret_key}}"
+key_name: srg-aws-apphost
+aws_region: us-east-1
+vpc_id: vpc-d65bc3b1
+cidr_ip: 156.40.0.0/16
+ami_id: ami-1476ec03
+instance_type: t2.micro
