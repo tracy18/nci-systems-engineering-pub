@@ -67,7 +67,7 @@
 
      - name: Update the drupal core
        shell: 
-         cmd: drush pm-update drupal-{{ drupal_version }} -y --verbose --no-backup
+         cmd: drush up -y --verbose --no-backup
          chdir: "{{ sites_root }}/{{ item }}"
        with_items: 
          - "{{ find_out.stdout_lines }}"
@@ -112,26 +112,6 @@
        
        register: dbupdate
      - debug: msg={{ dbupdate }}
-
-     - name: Run drush up on contrib modules.
-       shell: 
-         cmd: drush up -y
-         chdir: "{{ sites_root }}/{{ item }}"
-       with_items: 
-         - "{{ find_out.stdout_lines }}"
-       
-       register: update
-     - debug: msg={{ update }}
-
-     - name: Run drush updb again for contrib modules.
-       shell: 
-         cmd: drush updb -y
-         chdir: "{{ sites_root }}/{{ item }}"
-       with_items: 
-         - "{{ find_out.stdout_lines }}"
-       
-       register: updb
-     - debug: msg={{ updb }}
 
 
      - name: Take the {{ site }} out of maintenance mode
