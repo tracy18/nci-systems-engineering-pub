@@ -1,33 +1,8 @@
 ---
-# AWS provisioning playbooks
-#- name: EC2 Restore from vol snapshots
- # hosts: localhost
-  #connection: local
-  #include_vars: group_vars/all
-  #gather_facts: False
-
-  #tasks:
-  - name: Include Secret File
-    include_vars: aws_creds.yml
-    become: no
-    #ignore_errors: yes
-    tags: always
-
-  - name: Get STS Credentials
-    sts_assume_role:
-      role_arn: "arn:aws:iam::{{account_id}}:role/role-Jenkins"
-      role_session_name: "AutoDeploy-JenAnsible"
-      region: "{{ aws_region }}"
-      aws_access_key: "{{aws_access_key}}"
-      aws_secret_key: "{{aws_secret_key}}"
-    register: assumed_role
-    tags: always
-
-  - name: get remote facts
+  - name: get EC2 remote facts
     ec2_remote_facts:
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ aws_region }}"
       filters:
         instance-id: "{{actionable_instance_id}}"
@@ -40,9 +15,8 @@
     local_action:
       module: ec2
       aws_region: "{{aws_region}}"
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"      
       instance_ids:
         - "{{actionable_instance_id}}"
       state: stopped
@@ -56,14 +30,11 @@
   - name: Creating a Volume from a snapshot 
     ec2_vol: 
       region: "{{ aws_region }}"
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"      
       zone: "{{ issue_volume_zone }}"
       snapshot: "{{ snap_id }}"
       delete_on_termination: yes
-      #volume_size: 40 
-      #instance: "{{ actionable_instance_id }}"
     register: ec2_vol 
     tags: restore_ebsvolsnap
 
@@ -72,9 +43,8 @@
   - name: Detach the old volume 
     ec2_vol:
       region: "{{ aws_region }}"
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"      
       id: "{{ issue_volume_id }}"
       instance: None
     register: detach_vol
@@ -86,9 +56,8 @@
   - name: Attach the Created volume to an instance 
     ec2_vol:
       region: "{{ aws_region }}"
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"      
       instance: "{{ actionable_instance_id }}" 
       id: "{{ ec2_vol.volume_id }}" 
       device_name: "{{restore_device}}"
@@ -99,9 +68,8 @@
     local_action:
       module: ec2
       region: "{{ aws_region }}"
-      aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
-      aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
-      security_token: "{{ assumed_role.sts_creds.session_token }}"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"      
       instance_ids:
         - "{{actionable_instance_id}}"
       state: running

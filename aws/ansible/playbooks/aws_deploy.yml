@@ -1,4 +1,11 @@
 - name: Manage AWS Resources
   hosts: "{{variable_host}}"
+  connection: local
+  gather_facts: False
+  environment:
+    aws_access_key: "{{aws_access_key}}"
+    aws_secret_key: "{{aws_secret_key}}"
+    region: "{{aws_region}}"
+    
   tasks:
     - include: restore_ebsvol_snapshot.yml
