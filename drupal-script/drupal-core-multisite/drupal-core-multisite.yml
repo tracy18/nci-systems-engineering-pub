@@ -67,6 +67,7 @@
        shell: 
          cmd: drush @sites pm-update -y --verbose --no-backup
          chdir: "{{ sites_root }}"
+       ignore_errors: yes
        
        register: drupalupdate
 
