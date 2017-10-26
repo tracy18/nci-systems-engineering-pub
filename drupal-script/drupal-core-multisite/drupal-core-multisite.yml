@@ -65,7 +65,7 @@
 
      - name: Update the drupal core
        shell: 
-         cmd: drush default pm-update -y --verbose --no-backup
+         cmd: drush @sites pm-update -y --verbose --no-backup
          chdir: "{{ sites_root }}"
        
        register: drupalupdate
