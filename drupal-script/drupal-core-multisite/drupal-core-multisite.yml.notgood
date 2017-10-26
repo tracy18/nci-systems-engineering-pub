@@ -46,28 +46,31 @@
          cmd: cp -p robots.txt /tmp/robots-preserve-7.50
          chdir: "{{ drupalroot }}"
        
-     - name: Put the sites into maintenance mode
+     - name: Put the {{ item }} into maintenance mode
        shell: 
-         cmd: drush @sites vset --exact maintenance_mode 1 -y
-         chdir: "{{ sites_root }}"
-       
+         cmd: drush vset --exact maintenance_mode 1
+         chdir: "{{ sites_root }}/{{ item }}"
+       with_items: 
+         - "{{ find_out.stdout_lines }}"
        register: maint_mode
 
      - debug: msg={{ maint_mode }}
        
      - name: Clear drush cache
        shell:
-         cmd: drush @sites cc all -y
-         chdir: "{{ sites_root }}"
-       
+         cmd: drush cc all
+         chdir: "{{ sites_root }}/{{ item }}"
+       with_items: 
+         - "{{ find_out.stdout_lines }}"
        register: clear_cache
      - debug: msg={{ clear_cache }}
 
      - name: Update the drupal core
        shell: 
-         cmd: drush default pm-update -y --verbose --no-backup
-         chdir: "{{ sites_root }}"
-       
+         cmd: drush up -y --verbose --no-backup
+         chdir: "{{ sites_root }}/{{ item }}"
+       with_items: 
+         - "{{ find_out.stdout_lines }}"
        register: drupalupdate
 
      - debug: msg={{ drupalupdate }}
@@ -102,26 +105,31 @@
      
      - name: Update the drupal drupal database
        shell: 
-         cmd: drush @sites updatedb -y
-         chdir: "{{ sites_root }}"
+         cmd: drush updatedb -y
+         chdir: "{{ sites_root }}/{{ item }}"
+       with_items: 
+         - "{{ find_out.stdout_lines }}"
        
        register: dbupdate
      - debug: msg={{ dbupdate }}
 
 
-     - name: Take the site  out of maintenance mode
+     - name: Take the {{ site }} out of maintenance mode
        shell: 
-         cmd: drush @sites vset --exact maintenance_mode 0 -y
-         chdir: "{{ sites_root }}"
+         cmd: drush vset --exact maintenance_mode 0
+         chdir: "{{ sites_root }}/{{ item }}"
+       with_items: 
+         - "{{ find_out.stdout_lines }}"
 
        register: maint_mode
      - debug: msg={{ maint_mode }}
 
      - name: Clear drush cache
        shell:
-         cmd: drush @sites cc all -y
-         chdir: "{{ sites_root }}"
-       
+         cmd: drush cc all
+         chdir: "{{ sites_root }}/{{ item }}"
+       with_items: 
+         - "{{ find_out.stdout_lines }}"
        register: clear_cache
      - debug: msg={{ clear_cache }}
 
