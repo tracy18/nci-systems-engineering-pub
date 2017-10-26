@@ -113,6 +113,16 @@
        register: dbupdate
      - debug: msg={{ dbupdate }}
 
+     - name: Install fixer module.
+       shell: 
+         cmd: drush en module_missing_message_fixer -y &&  drush module-missing-message-fixer-fix --all -y
+         chdir: "{{ sites_root }}/{{ item }}"
+       with_items: 
+         - "{{ find_out.stdout_lines }}"
+       
+       register: dbupdate
+     - debug: msg={{ dbupdate }}
+
      - name: Take the {{ site }} out of maintenance mode
        shell: 
          cmd: drush vset --exact maintenance_mode 0
